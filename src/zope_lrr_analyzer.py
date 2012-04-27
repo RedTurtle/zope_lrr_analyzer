@@ -22,7 +22,10 @@ import re
 import logging
 import optparse
 from datetime import datetime, timedelta
-from ordereddict import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
 
 version = "0.1"
 description = "Analyze Zope instance log with haufe.requestmonitoring entries"
