@@ -50,10 +50,10 @@ Let explain the given results::
         3 - 1350.58498883 (0:22:30.584989)
 
 You'll get a ranking of slowest request paths (top one is faster, last one is slowest).
-The order is not done collecting all request's done to the same path, getting the total time.
+The order is done collecting all request's performed to the same path, then getting the total time.
 
-This mean that a request called only one time and that need 30 seconds is faster that another path
-that only require 10 seconds, but is called ten times.
+This mean that a request called only one time that need 30 seconds is faster that another path
+that only require 10 seconds, but is called ten times (30x1 < 10x10).
 
 Single entry meaning
 --------------------
