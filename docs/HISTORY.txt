@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.2 (Unreleased)
+0.2 (2012-09-19)
 ----------------
 
 * added the ``--keep-request-id`` option
