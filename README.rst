@@ -4,7 +4,7 @@ Introduction
 ============
 
 This project adds to your system a new utility command: ``zope_lrr_analyzer``. This utility only works with
-Zope instance logs, where you also intalled `haufe.requestmonitoring`__.
+Zope instance logs with `haufe.requestmonitoring`__ installed.
 
 __ http://pypi.python.org/pypi/haufe.requestmonitoring
 
@@ -40,7 +40,7 @@ How to use
 Results
 =======
 
-Let explain the given results::
+Let's explain the results::
 
     Stats from 2012-04-27 00:02:07 to 2012-04-27 16:55:41
     ...
@@ -52,11 +52,11 @@ Let explain the given results::
     1  /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/foo/another
         3 - 1350.58498883 (0:22:30.584989)
 
-You'll get a ranking of slowest request paths (top one is faster, last one is slowest).
-The order is done collecting all request's performed to the same path, then getting the total time.
+You'll get a rank of slowest request paths (top one is fastest, last one is slowest).
+The order is done by collecting all request's performed to the same path and then getting the total time.
 
-This mean that a request called only one time that need 30 seconds is faster that another path
-that only require 10 seconds, but is called ten times (30x1 < 10x10).
+This mean that a request called only once that needs 30 seconds is faster that another path
+that only requires 10 seconds, but is called ten times (30x1 < 10x10).
 
 If you use also the ``--keep-request-id`` option, every request is count as a separate entry,
 so the output change a little::
