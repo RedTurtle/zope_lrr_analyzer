@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.2 (Unreleased)
+----------------
+
+* added the ``--keep-request-id`` option
+  [keul]
+* also store (and display if ``-r`` option is given) the start and end request time
+  [keul]
+
 0.1 (2012-04-27)
 ----------------
 

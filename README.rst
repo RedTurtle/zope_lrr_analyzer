@@ -33,6 +33,9 @@ How to use
                             a regexp expression that a calling path must match or
                             will be discarded. Can be called multiple times,
                             expanding the set
+      -r, --keep-request-id
+                            Use request and thread ids to handle every match as a
+                            different entry
 
 Results
 =======
@@ -55,6 +58,19 @@ The order is done collecting all request's performed to the same path, then gett
 This mean that a request called only one time that need 30 seconds is faster that another path
 that only require 10 seconds, but is called ten times (30x1 < 10x10).
 
+If you use also the ``--keep-request-id`` option, every request is count as a separate entry,
+so the output change a little::
+
+    Stats from 2012-04-27 00:02:07 to 2012-04-27 16:55:41
+    ...
+    ----
+    2 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/foo/foo
+        1510.2860291 (0:25:10.286029) - from 2012-09-19 08:36:27 to 2012-09-19 09:01:22
+    
+    ----
+    1 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/foo/another
+        1750.49365091 (0:29:10.493651) - from 2012-09-19 08:30:34 to 2012-09-19 09:00:58
+
 Single entry meaning
 --------------------
 
@@ -68,6 +84,17 @@ Every entry gives that kind of data::
          Times called  |      Time needed (human readable)
                        |
               Time needed (in seconds)
+
+When ``--keep-request-id`` used::
+
+    Entry position                       Called path
+         |                                   |
+         1 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/...
+             1750.49365091 (0:29:10.493651) - from 2012-09-19 08:30:34 to 2012-09-19 09:00:58
+                |               |                           |                      |
+    Time needed (in seconds)    |                 slow request start date          |
+                                |                                                  |
+                       Time needed (human readable)                       slow request end date
 
 Authors
 =======
