@@ -11,7 +11,7 @@ if sys.version_info < (2, 7):
     install_requires.append('ordereddict')
 
 setup(name='zope_lrr_analyzer',
-      version='0.2',
+      version='0.3.dev0',
       description="Analyze Zope instance log with haufe.requestmonitoring entries",
       long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
