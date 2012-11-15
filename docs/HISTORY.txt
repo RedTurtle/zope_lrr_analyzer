@@ -4,8 +4,9 @@ Changelog
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Always display the start and end date of the request
+  (not only if ``-r`` option is given)
+  [keul]
 
 0.2 (2012-09-19)
 ----------------

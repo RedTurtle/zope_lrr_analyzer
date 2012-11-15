@@ -27,7 +27,7 @@ try:
 except ImportError:
     from ordereddict import OrderedDict
 
-version = "0.2"
+version = "0.3"
 description = "Analyze Zope instance log with haufe.requestmonitoring entries"
 
 usage = "usage: %prog [options] logfile [logfile...]"
@@ -144,9 +144,14 @@ def main():
         unordered_stats[path]['totaltime'] = sum([float(x['reqtime']) for x in request_data])
         unordered_stats[path]['req-thread-ids'] = tempstat.keys()
         if options.keep_req_id:
+            # every thread can keep start/end date
             unordered_stats[path]['start'] = request_data[0]['start']
             unordered_stats[path]['end'] = request_data[0]['end']
-    
+        else:
+            # we must store start/end date per request, ignoring thread
+            unordered_stats[path]['start'] = min([x['start'] for x in request_data])
+            unordered_stats[path]['end'] = max([x['end'] for x in request_data])
+
     ### Step 3. final results
     final_stats = OrderedDict(sorted(unordered_stats.items(), key=lambda t: float(t[1]['totaltime'])))
     
@@ -158,7 +163,10 @@ def main():
     cnt = len(logset)
     for k,v in logset:
         if not options.keep_req_id:
-            print "----\n%s %s\n    %d - %s (%s)\n" % (cnt, k, v['count'], v['totaltime'], timedelta(seconds=float(v['totaltime'])))
+            print "----\n%s %s\n    %d - %s (%s) - from %s to %s\n" % (cnt, k, v['count'], v['totaltime'],
+                                                                       timedelta(seconds=float(v['totaltime'])),
+                                                                       v['start'], v['end'],
+                                                                       )
         else:
             path, reqid, threadid = k.split('|')
             print "----\n%s %s (request %s/thread %s)\n    %s (%s) - from %s to %s\n" % (cnt, path, reqid, threadid, v['totaltime'],

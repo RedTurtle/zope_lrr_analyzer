@@ -42,15 +42,15 @@ Results
 
 Let's explain the results::
 
-    Stats from 2012-04-27 00:02:07 to 2012-04-27 16:55:41
+    Stats from 2012-11-14 00:02:07 to 2012-11-15 09:55:41
     ...
-    ----    
-    2 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/foo/foo
-        15 - 171.913325071 (0:02:51.913325)
-        
     ----
-    1  /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/foo/another
-        3 - 1350.58498883 (0:22:30.584989)
+    2 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/foo/bar
+        25 - 3654.05561542 (1:00:54.055615) - from 2012-11-15 07:48:10 to 2012-11-15 08:45:29
+    
+    ----
+    1 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/baz
+        77 - 16029.3731236 (4:27:09.373124) - from 2012-11-15 07:43:55 to 2012-11-15 08:45:30
 
 You'll get a rank of slowest request paths (top one is fastest, last one is slowest).
 The order is done by collecting all request's performed to the same path and then getting the total time.
@@ -64,11 +64,11 @@ so the output change a little::
     Stats from 2012-04-27 00:02:07 to 2012-04-27 16:55:41
     ...
     ----
-    2 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/foo/foo
+    2 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/foo/bar
         1510.2860291 (0:25:10.286029) - from 2012-09-19 08:36:27 to 2012-09-19 09:01:22
     
     ----
-    1 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/foo/another
+    1 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/baz
         1750.49365091 (0:29:10.493651) - from 2012-09-19 08:30:34 to 2012-09-19 09:00:58
 
 Single entry meaning
@@ -79,11 +79,11 @@ Every entry gives that kind of data::
     Entry position                       Called path
          |                                   |
          1 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/...
-             15 - 171.913325071 (0:02:51.913325)
-             |         |                |
-         Times called  |      Time needed (human readable)
-                       |
-              Time needed (in seconds)
+             15 - 171.913325071 (0:02:51.913325) - from 2012-09-19 08:30:34 to 2012-09-19 09:00:58
+             |         |                |                       |                       |
+         Times called  |      Time needed (human readable)      |                       |
+                       |                                        |              Slow request end date
+              Time needed (in seconds)                Slow request start date
 
 When ``--keep-request-id`` used::
 
@@ -91,10 +91,13 @@ When ``--keep-request-id`` used::
          |                                   |
          1 /VirtualHostBase/http/yoursite.com:80/siteid/VirtualHostRoot/...
              1750.49365091 (0:29:10.493651) - from 2012-09-19 08:30:34 to 2012-09-19 09:00:58
-                |               |                           |                      |
-    Time needed (in seconds)    |                 slow request start date          |
+                 |              |                           |                      |
+     Time needed (in seconds)   |                 Slow request start date          |
                                 |                                                  |
-                       Time needed (human readable)                       slow request end date
+                       Time needed (human readable)                       Slow request end date
+
+
+Please note that the "*Time needed*" info is machine computation time.
 
 Authors
 =======
