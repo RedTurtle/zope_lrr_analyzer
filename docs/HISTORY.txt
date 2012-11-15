@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.3 (unreleased)
+0.3 (2012-11-15)
 ----------------
 
 - Always display the start and end date of the request
