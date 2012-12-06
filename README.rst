@@ -4,11 +4,28 @@ Introduction
 ============
 
 This project adds to your system a new utility command: ``zope_lrr_analyzer``. This utility only works with
-Zope instance logs with `haufe.requestmonitoring`__ installed.
+Zope instance logs with `haufe.requestmonitoring`__ installed (and where the
+`monitoring long running requests hook`__ is enabled).
 
 __ http://pypi.python.org/pypi/haufe.requestmonitoring
+__ http://pypi.python.org/pypi/haufe.requestmonitoring#monitoring-long-running-requests
 
-It will help you to parse slow running request reports and collect some statistical data.
+Your *instance.log* will be populated by entries like this::
+
+    ------
+    2012-03-27T15:58:19 WARNING RequestMonitor.DumpTrace Long running request
+    Request 28060 "/VirtualHostBase/http/www.mysite.com:80/mysiteid/VirtualHostRoot/myrequest/..." running in thread 1133545792 since 10.7206499577s
+    Python call stack (innermost first)
+      ...
+      lot of lines, depends on Python traceback
+      ...
+      Module ZPublisherEventsBackport.patch, line 80, in publish
+      Module ZPublisher.Publish, line 202, in publish_module_standard
+      Module ZPublisher.Publish, line 401, in publish_module
+      Module ZServer.PubCore.ZServerPublisher, line 25, in __init__
+    <BLANKLINE>
+
+The utility will help you to parse long running request collecting some statistical data.
 
 How to use
 ==========
@@ -33,6 +50,10 @@ How to use
                             a regexp expression that a calling path must match or
                             will be discarded. Can be called multiple times,
                             expanding the set
+      -t TRACEBACK_INCLUDE_REGEX, --traceback-include=TRACEBACK_INCLUDE_REGEX
+                            a regexp expression that the Python traceback must
+                            match or will be discarded. Can be called multiple
+                            times, expanding the set
       -r, --keep-request-id
                             Use request and thread ids to handle every match as a
                             different entry

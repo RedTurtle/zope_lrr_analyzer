@@ -4,13 +4,13 @@ Changelog
 0.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+* added the ``--traceback-include`` option
+  [keul]
 
 0.3 (2012-11-15)
 ----------------
 
-- Always display the start and end date of the request
+* Always display the start and end date of the request
   (not only if ``-r`` option is given)
   [keul]
 

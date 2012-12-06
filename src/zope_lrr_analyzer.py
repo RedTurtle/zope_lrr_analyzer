@@ -43,6 +43,10 @@ p.add_option('--log-size', '-l', type="int", dest="log_size", default=None,
 p.add_option('--include', '-i', dest="includes", default=[], action="append", metavar="INCLUDE_REGEX",
              help="a regexp expression that a calling path must match or will be discarded. "
                   "Can be called multiple times, expanding the set")
+p.add_option('--traceback-include', '-t', dest="traceback_includes", default=[], action="append",
+             metavar="TRACEBACK_INCLUDE_REGEX",
+             help="a regexp expression that the Python traceback must match or will be discarded. "
+                  "Can be called multiple times, expanding the set")
 p.add_option('--keep-request-id', '-r', dest="keep_req_id", default=False, action="store_true",
              help="Use request and thread ids to handle every match as a different entry")
 
@@ -52,13 +56,13 @@ logger = logging.getLogger("zope_lrr_analyzer")
 PATTERN = """^------$
 ^(?P<date>\d{4}-\d{2}-\d{2})T(?P<time>\d\d\:\d\d\:\d\d).*?$
 ^Request (?P<reqid>\d*?) "(?P<path>.*?)" running in thread (?P<threadid>\d*?) since (?P<reqtime>\d*?\.\d*?)s$
-.*?
+(?P<traceback>.*?)
 ^$"""
 
-PATH_PARRENT = """^(?P<path>.*?)(?:\?.*?)?$"""
+PATH_PATTERN = """^(?P<path>.*?)(?:\?.*?)?$"""
 
 reqLine = re.compile(PATTERN, re.M|re.S)
-pathLine = re.compile(PATH_PARRENT, re.M|re.S)
+pathLine = re.compile(PATH_PATTERN, re.M|re.S)
 
 stats = {}
 stat_data = {'count': 0, 'totaltime': 0, 'req-thread-ids': [], 'start': None, 'end': None}
@@ -93,6 +97,7 @@ def main():
             threadid = data.get('threadid')
             rdate = data.get('date')
             rtime = data.get('time')
+            traceback = data.get('traceback')
     
             d = datetime.strptime("%s %s" % (rdate, rtime), "%Y-%m-%d %H:%M:%S")
     
@@ -101,7 +106,7 @@ def main():
             if end_at and d>end_at:
                 break
     
-            # include only...
+            # include only... (path)
             stop = False
             if options.includes:
                 stop = True
@@ -111,7 +116,18 @@ def main():
                         break
             if stop:
                 continue
-            
+
+            # include only... (traceback)
+            stop = False
+            if options.traceback_includes:
+                stop = True
+                for i in options.traceback_includes:
+                    if re.search(i, traceback, re.MULTILINE) is not None:
+                        stop = False
+                        break
+            if stop:
+                continue
+
             if not min_date or d<min_date:
                 min_date = d
             if not max_date or d>min_date:
