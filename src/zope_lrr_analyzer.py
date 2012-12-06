@@ -27,7 +27,7 @@ try:
 except ImportError:
     from ordereddict import OrderedDict
 
-version = "0.4"
+version = "0.5"
 description = "Analyze Zope instance log with haufe.requestmonitoring entries"
 
 usage = "usage: %prog [options] logfile [logfile...]"
