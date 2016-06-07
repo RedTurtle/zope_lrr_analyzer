@@ -172,7 +172,7 @@ def main():
                 else:
                     path = "%s|%s|%s" % (match.groups()[0], reqid, threadid)
 
-                if not lrr_counter.get(reqid):
+                if reqid not in lrr_counter.keys():
                     lrr_counter[reqid] = True
 
                 if not stats.get(path):
