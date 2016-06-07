@@ -90,13 +90,27 @@ def main():
     start_from = None
     end_at = None
     if options.start_from:
-        start_from = datetime.strptime(options.start_from, "%Y-%m-%d %H:%M:%S")
+        try:
+            start_from = datetime.strptime(
+                options.start_from, "%Y-%m-%d %H:%M:%S"
+            )
+        except ValueError:
+            start_from = datetime.strptime(
+                options.start_from, "%Y-%m-%d"
+            )
     if options.end_at:
-        end_at = datetime.strptime(options.end_at, "%Y-%m-%d %H:%M:%S")
+        try:
+            end_at = datetime.strptime(options.end_at, "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            end_at = datetime.strptime(
+                "{} 23:59:59".format(options.end_at), "%Y-%m-%d %H:%M:%S"
+            )
 
     if not arguments:
         print p.format_help()
         sys.exit(1)
+
+    lrr_counter = {}
 
     # Step 1. collect raw data
     for param in arguments:
@@ -157,6 +171,10 @@ def main():
                 # alternative case: store a record for request/thread id
                 else:
                     path = "%s|%s|%s" % (match.groups()[0], reqid, threadid)
+
+                if not lrr_counter.get(reqid):
+                    lrr_counter[reqid] = True
+
                 if not stats.get(path):
                     stats[path] = {}
 
@@ -193,7 +211,9 @@ def main():
     final_stats = OrderedDict(
         sorted(unordered_stats.items(), key=lambda t: float(t[1]['totaltime'])))
 
-    print "Stats from %s to %s\n" % (min_date, max_date)
+    print "Stats from %s to %s (%d LRR catched)\n" % (
+        min_date, max_date, len(lrr_counter)
+    )
     logset = final_stats.items()
     if options.log_size is not None and len(logset) > options.log_size:
         logset = logset[-options.log_size:]

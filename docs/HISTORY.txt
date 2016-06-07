@@ -4,8 +4,10 @@ Changelog
 0.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Display info about total count of catched LRR
+  [keul]
+- Can now use ``-s`` and ``-e`` as a date string (no time needed)
+  [keul]
 
 0.4 (2012-12-06)
 ----------------
